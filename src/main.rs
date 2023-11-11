@@ -13,10 +13,29 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(Camera2dBundle::default());
-    commands.spawn(SpriteBundle {
-        texture: asset_server.load("icon.png"),
+fn setup(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+    asset_server: Res<AssetServer>,
+) {
+    commands.spawn(Camera3dBundle {
+        transform: Transform::from_xyz(1.0, 2.0, 10.0).looking_at(Vec3::ZERO, Vec3::Y),
+        ..Default::default()
+    });
+
+    commands.spawn(DirectionalLightBundle {
+        directional_light: DirectionalLight {
+            illuminance: 4000.0,
+            shadows_enabled: true,
+            ..Default::default()
+        },
+        transform: Transform::default().looking_at(-Vec3::Y, Vec3::Z),
+        ..Default::default()
+    });
+
+    commands.spawn(SceneBundle {
+        scene: asset_server.load("thing.gltf#Scene0"),
         ..Default::default()
     });
 }
